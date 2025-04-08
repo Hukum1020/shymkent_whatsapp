@@ -8,6 +8,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from flask import Flask, send_from_directory
 from twilio.rest import Client
 from weasyprint import HTML
+from pdf2image import convert_from_path
 import threading
 
 app = Flask(__name__)
@@ -38,7 +39,10 @@ client = gspread.authorize(creds)
 sheet = client.open_by_key(SPREADSHEET_ID).sheet1
 
 def html_to_image(html_path, image_path):
-    HTML(html_path).write_png(image_path)
+    temp_pdf = image_path.replace('.png', '.pdf')
+    HTML(html_path).write_pdf(temp_pdf)
+    images = convert_from_path(temp_pdf)
+    images[0].save(image_path, 'PNG')
 
 def send_whatsapp(phone, image_filename):
     try:
