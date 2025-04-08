@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     libxml2 \
     libxslt1.1 \
-    poppler-utils \  # ← вот он!
+    poppler-utils \ 
     curl \
     wget \
     git \
