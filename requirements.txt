@@ -5,3 +5,4 @@ qrcode
 twilio
 weasyprint
 gunicorn
+pdf2image
