@@ -3,5 +3,5 @@ gspread
 oauth2client
 qrcode
 twilio
-html2image
-Pillow
+weasyprint
+gunicorn
