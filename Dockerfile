@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     wget \
     git \
+    poppler-utils \
     && apt-get clean
 
 COPY requirements.txt .
