@@ -4,6 +4,7 @@ import qrcode
 import json
 import traceback
 import gspread
+import re
 from oauth2client.service_account import ServiceAccountCredentials
 from flask import Flask, send_from_directory
 from twilio.rest import Client
@@ -44,16 +45,23 @@ def html_to_image(html_path, image_path):
     images = convert_from_path(temp_pdf)
     images[0].save(image_path, 'PNG')
 
+def normalize_phone(phone):
+    digits = re.sub(r'\D', '', phone)
+    if digits.startswith('8'):
+        digits = '7' + digits[1:]
+    return f'whatsapp:+{digits}'
+
 def send_whatsapp(phone, image_filename):
     try:
         url = f"https://yourdomain.kz/qrcodes/{image_filename}"
+        to_number = normalize_phone(phone)
         message = twilio_client.messages.create(
             from_=TWILIO_FROM,
-            to=f"whatsapp:{phone}",
+            to=to_number,
             body="Привет! Вот твой персональный QR-код для участия 🚁",
             media_url=[url]
         )
-        print(f"✅ WhatsApp отправлено на {phone}")
+        print(f"✅ WhatsApp отправлено на {to_number}")
         return True
     except Exception as e:
         print(f"❌ Ошибка WhatsApp: {e}")
