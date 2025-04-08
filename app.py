@@ -7,7 +7,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from flask import Flask, send_from_directory
 from twilio.rest import Client
-from html2image import Html2Image
+from weasyprint import HTML
 import threading
 
 app = Flask(__name__)
@@ -38,8 +38,7 @@ client = gspread.authorize(creds)
 sheet = client.open_by_key(SPREADSHEET_ID).sheet1
 
 def html_to_image(html_path, image_path):
-    hti = Html2Image(output_path=os.path.dirname(image_path))
-    hti.screenshot(html_file=html_path, save_as=os.path.basename(image_path))
+    HTML(html_path).write_png(image_path)
 
 def send_whatsapp(phone, image_filename):
     try:
@@ -76,8 +75,8 @@ def process_new_guests():
             qr = qrcode.make(qr_data)
             qr.save(qr_filename)
 
-            img_filename = qr_filename.replace(".png", "_full.png")
             html_template_path = f"shym{language}.html"
+            img_filename = qr_filename.replace(".png", "_full.png")
             html_to_image(html_template_path, img_filename)
 
             whatsapp_sent = send_whatsapp(phone, os.path.basename(img_filename))
