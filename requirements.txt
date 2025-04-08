@@ -2,4 +2,5 @@ Flask
 gspread
 oauth2client
 qrcode
-Pillow
+twilio
+html2image
